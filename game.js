@@ -4,20 +4,17 @@ function setup() {
 
 let x = 250;
 let y = 370;
-const s = 0.9;
+const s = 0.8;
 
-function submarine(x, y, s) {
-  background(125, 200, 236);
-
+function submarine(x, y) {
   //sandbottom
   noStroke();
   fill(220, 170, 120);
-  ellipse(60, 520, 400, 100);
+
   fill(222, 184, 125);
   ellipse(80, 600, 560, 200);
   ellipse(510, 600, 400, 200);
-  fill(220, 170, 120);
-  ellipse(300, 550, 300, 100);
+  ellipse(259, 550, 350, 130);
 
   //windows of the submarine
   function window(x, y) {
@@ -96,6 +93,6 @@ function draw() {
   if (keyIsDown(32)) {
     y = y - 1;
   } else if (y < 650) {
-    y = y + 4;
+    y = y + 2;
   }
 }
