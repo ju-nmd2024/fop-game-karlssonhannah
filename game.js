@@ -10,8 +10,10 @@ let o = 300;
 let r = 250;
 const s = 0.6;
 let screen = "start";
-let velocity = 0.5;
-const acceleration = 0.1;
+let velocity = 1;
+let gravity = 0.5;
+let submarineX = 300;
+let submarineY = 200;
 
 //fish in background
 function fish(f, i) {
@@ -25,6 +27,7 @@ function fish(f, i) {
   fill(0, 0, 0);
   ellipse(f + 132, i + 5, 5, 5);
 }
+//for(let i = 0; i <6; i++)
 
 function fishMove() {
   push();
@@ -142,12 +145,18 @@ function startScreen() {
 function gameScreen() {
   fishMove();
   oceanBottom();
-  submarine(x, y - 200, 0.9);
+  submarine(submarineX, submarineY - 200, 0.9);
+
   if (keyIsDown(32)) {
-    y = y - 1;
-  } else if (y < 650) {
-    y = y + velocity;
-    velocity += acceleration;
+    gravity = -0.8;
+  } else {
+    gravity = 1;
+  }
+  velocity = velocity + gravity;
+  submarineY = submarineY + velocity;
+
+  if (y >= 500) {
+    velocity = 0;
   }
 }
 
