@@ -1,9 +1,6 @@
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(700, 600);
 }
-
-let x = 250;
-let y = 370;
 let f = 300;
 let i = 200;
 let o = 300;
@@ -11,13 +8,19 @@ let r = 250;
 const s = 0.6;
 let velocity = 0.5;
 let gravity = 0.15;
-let submarineX = 300;
+let submarineX = 350;
 let submarineY = 200;
 let gameState = true;
+let state = "start";
+let shadowWidth = 0;
+let shadowHeight = 0;
+let fishY = 200;
+let fishColor = color(255, 153, 51);
+x = 0;
+y = 0;
 
-//fish in background
 function fish(f, i) {
-  fill(255, 153, 51);
+  fill(fishColor);
   noStroke();
   ellipse(f + 100, i + 10, 100, 20, 10);
   fill(255, 102, 0);
@@ -27,33 +30,59 @@ function fish(f, i) {
   fill(0, 0, 0);
   ellipse(f + 132, i + 5, 5, 5);
 }
-//for(let i = 0; i <6; i++)
 
 function fishMove() {
   push();
-  fill(255, 255, 255);
   background(125, 200, 236);
   fish(f - 230, i - 40);
   fish(f - 250, i - 150);
   fish(f - 250, i + 100);
   fish(f - 220, i + 50);
   fish(f - 180, i - 100);
+  fish(f - 10, i + 10);
+
+  //if you loose game, fish will be black
+  if (state === "lost") {
+    fishColor = color(0, 0, 0);
+  }
+
+  if (state !== "lost") {
+    fishColor = color(255, 153, 51);
+  }
   //movement for the fishes
   f = f + 0.7;
-  if (f > 500) {
+  if (f > 700) {
     f = -10;
   }
   pop();
 }
 
-//oceanbottom
 function oceanBottom() {
   push();
+
+  //sand bottom
   fill(246, 215, 176);
   noStroke();
-  rect(o - 300, r + 250, 590, 105);
+  rect(o - 300, r + 250, 700, 105);
+  //stones
+  fill(200, 180, 150);
+  ellipse(o - 250, r + 330, 30, 20);
+  ellipse(o - 100, r + 330, 40, 25);
+  ellipse(o + 10, r + 310, 20, 15);
+  //sand
+  fill(232, 203, 160);
+  ellipse(o + 300, r + 335, 50, 10);
+  ellipse(o + 330, r + 320, 60, 12);
+  //grass
+  fill(34, 139, 34);
+  noStroke();
+  triangle(o - 205, r + 320, o - 210, r + 270, o - 200, r + 320);
+  triangle(o - 200, r + 320, o - 195, r + 250, o - 190, r + 320);
+  triangle(o - 190, r + 320, o - 185, r + 270, o - 180, r + 320);
+
   pop();
 }
+
 function submarine(x, y) {
   push();
   translate();
@@ -128,25 +157,27 @@ function submarine(x, y) {
   pop();
 }
 
-function draw() {
-  fish(f, i);
-  scenery();
-  oceanBottom();
-}
-
 function startScreen() {
   fishMove();
   oceanBottom();
   textSize(50);
-  fill(255, 255, 255);
-  text("click to start ", 195, 290);
+  fill(0);
+  text("click to start ", 220, 390);
+  fill(242, 82, 67);
+  ellipse(350, 240, 390, 190);
+  textSize(40);
+  fill(255);
+  text("Submarine Lander", 190, 260);
 }
 
 function gameScreen() {
   fishMove();
   oceanBottom();
-  submarine(submarineX, submarineY - 200, 0.9);
+  //landing plattform
+  fill(101, 67, 33);
+  ellipse(350, 510, shadowWidth, shadowHeight);
 
+  submarine(submarineX, submarineY - 200, 0.9);
   if (gameState === true) {
     if (keyIsDown(32)) {
       gravity = -1;
@@ -155,13 +186,15 @@ function gameScreen() {
     }
     velocity = velocity + gravity;
     submarineY = submarineY + velocity;
+
+    shadowWidth = (submarineY / 750) * 200;
+    shadowHeight = (submarineY / 750) * 40;
   }
   if (y > 750) {
     gameState = false;
   }
 }
 
-let state = "start";
 function draw() {
   if (state === "start") {
     startScreen();
@@ -185,19 +218,23 @@ function winScreen() {
   oceanBottom();
   textSize(50);
   fill(0, 128, 0);
-  text("YOU WON", 160, 300);
+  text("YOU WON", 220, 290);
   fill(255, 255, 255);
-  text("click to play again", 170, 350);
+  textSize(40);
+  text("click to play again", 220, 390);
 }
 
 function lostScreen() {
   fishMove();
   oceanBottom();
+  pop();
   textSize(50);
   fill(255, 0, 0);
-  text("GAME OVER", 160, 300);
+  text("GAME OVER", 200, 290);
   fill(255, 255, 255);
-  text("click to play again", 170, 350);
+  textSize(40);
+  text("click to play again", 220, 390);
+  push();
 }
 
 function mouseClicked() {
