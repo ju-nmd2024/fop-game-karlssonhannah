@@ -9,11 +9,11 @@ let i = 200;
 let o = 300;
 let r = 250;
 const s = 0.6;
-let screen = "start";
-let velocity = 1;
-let gravity = 0.5;
+let velocity = 0.5;
+let gravity = 0.15;
 let submarineX = 300;
 let submarineY = 200;
+let gameState = true;
 
 //fish in background
 function fish(f, i) {
@@ -147,30 +147,36 @@ function gameScreen() {
   oceanBottom();
   submarine(submarineX, submarineY - 200, 0.9);
 
-  if (keyIsDown(32)) {
-    gravity = -0.8;
-  } else {
-    gravity = 1;
+  if (gameState === true) {
+    if (keyIsDown(32)) {
+      gravity = -1;
+    } else {
+      gravity = 0.1;
+    }
+    velocity = velocity + gravity;
+    submarineY = submarineY + velocity;
   }
-  velocity = velocity + gravity;
-  submarineY = submarineY + velocity;
-
-  if (y >= 500) {
-    velocity = 0;
-  }
-}
-
-function mouseClicked() {
-  if (screen === "start") {
-    screen = "game";
-    y = 200;
+  if (y > 750) {
+    gameState = false;
   }
 }
+
+let state = "start";
 function draw() {
-  if (screen === "start") {
+  if (state === "start") {
     startScreen();
-  } else if (screen === "game") {
+  } else if (state === "game") {
     gameScreen();
+  } else if (state === "lost") {
+    lostScreen();
+  } else if (state === "win") {
+    winScreen();
+  }
+  if (submarineY > 650 && velocity < 4) {
+    state = "win";
+  }
+  if (submarineY > 650 && velocity > 4) {
+    state = "lost";
   }
 }
 
@@ -192,4 +198,17 @@ function lostScreen() {
   text("GAME OVER", 160, 300);
   fill(255, 255, 255);
   text("click to play again", 170, 350);
+}
+
+function mouseClicked() {
+  if (state === "start") {
+    state = "game";
+  }
+  if (state === "win" || state === "lost") {
+    state = "start";
+    gameState = true;
+    submarineY = 100;
+    velocity = 0.5;
+    gravity = -1;
+  }
 }
