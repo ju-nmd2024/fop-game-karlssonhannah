@@ -9,7 +9,7 @@ const s = 0.6;
 let velocity = 0.5;
 let gravity = 0.15;
 let submarineX = 350;
-let submarineY = 200;
+let submarineY = -100;
 let gameState = true;
 let state = "start";
 let shadowWidth = 0;
@@ -32,14 +32,13 @@ function fish(f, i) {
 }
 
 function fishMove() {
-  push();
   background(125, 200, 236);
   fish(f - 230, i - 40);
   fish(f - 250, i - 150);
   fish(f - 250, i + 100);
   fish(f - 220, i + 50);
   fish(f - 180, i - 100);
-  fish(f - 10, i + 10);
+  fish(f - 230, i + 10);
 
   //if you loose game, fish will be black
   if (state === "lost") {
@@ -50,13 +49,28 @@ function fishMove() {
     fishColor = color(255, 153, 51);
   }
   //movement for the fishes
-  f = f + 0.7;
-  if (f > 700) {
-    f = -10;
+  f = f + 1.5;
+  if (f > 800) {
+    f = -5;
   }
-  pop();
 }
 
+function grass(o, r) {
+  fill(34, 139, 34);
+  noStroke();
+  triangle(o - 205, r + 320, o - 210, r + 270, o - 200, r + 320);
+  triangle(o - 200, r + 320, o - 195, r + 250, o - 190, r + 320);
+  triangle(o - 190, r + 320, o - 185, r + 270, o - 180, r + 320);
+}
+
+function grassBottom() {
+  grass(o - 20, r - 40);
+  grass(o + 100, r - 40);
+  grass(o + 50, r - 20);
+  grass(o + 400, r - 40);
+  grass(o + 480, r - 40);
+  grass(o + 450, r - 20);
+}
 function oceanBottom() {
   //sand bottom
   fill(246, 215, 176);
@@ -71,18 +85,9 @@ function oceanBottom() {
   fill(232, 203, 160);
   ellipse(o + 300, r + 335, 50, 10);
   ellipse(o + 330, r + 320, 60, 12);
-  //grass
-  fill(34, 139, 34);
-  noStroke();
-  triangle(o - 205, r + 320, o - 210, r + 270, o - 200, r + 320);
-  triangle(o - 200, r + 320, o - 195, r + 250, o - 190, r + 320);
-  triangle(o - 190, r + 320, o - 185, r + 270, o - 180, r + 320);
 }
 
 function submarine(x, y) {
-  push();
-  translate();
-  //windows of the submarine
   function window(x, y) {
     stroke(64, 64, 64);
     strokeWeight(6);
@@ -149,14 +154,14 @@ function submarine(x, y) {
     x + 160 * s,
     y + 70 * s
   );
-  pop();
 }
 
 function startScreen() {
   fishMove();
   oceanBottom();
   textSize(50);
-  fill(0);
+  grassBottom();
+  fill(0, 0, 0);
   text("click to start ", 220, 390);
   fill(242, 82, 67);
   ellipse(350, 240, 390, 190);
@@ -171,8 +176,9 @@ function gameScreen() {
   //landing plattform
   fill(101, 67, 33);
   ellipse(350, 510, shadowWidth, shadowHeight);
+  grassBottom();
 
-  submarine(submarineX, submarineY - 200, 0.9);
+  submarine(submarineX, submarineY);
   if (gameState === true) {
     if (keyIsDown(32)) {
       gravity = -1;
@@ -184,9 +190,6 @@ function gameScreen() {
 
     shadowWidth = (submarineY / 750) * 200;
     shadowHeight = (submarineY / 750) * 40;
-  }
-  if (y > 750) {
-    gameState = false;
   }
 }
 
@@ -200,10 +203,10 @@ function draw() {
   } else if (state === "win") {
     winScreen();
   }
-  if (submarineY > 650 && velocity < 4) {
+  if (submarineY > 450 && velocity < 4) {
     state = "win";
   }
-  if (submarineY > 650 && velocity > 4) {
+  if (submarineY > 450 && velocity > 4) {
     state = "lost";
   }
 }
@@ -211,9 +214,12 @@ function draw() {
 function winScreen() {
   fishMove();
   oceanBottom();
+  grassBottom();
   textSize(50);
   fill(0, 128, 0);
-  text("YOU WON", 220, 290);
+  ellipse(350, 240, 390, 190);
+  fill(255, 255, 255);
+  text("YOU WON", 220, 260);
   fill(255, 255, 255);
   textSize(40);
   text("click to play again", 220, 390);
@@ -222,14 +228,15 @@ function winScreen() {
 function lostScreen() {
   fishMove();
   oceanBottom();
-  pop();
+  grassBottom();
   textSize(50);
   fill(255, 0, 0);
-  text("GAME OVER", 200, 290);
+  ellipse(350, 240, 390, 190);
+  fill(0, 0, 0);
+  text("GAME OVER", 200, 260);
   fill(255, 255, 255);
   textSize(40);
   text("click to play again", 220, 390);
-  push();
 }
 
 function mouseClicked() {
@@ -237,10 +244,9 @@ function mouseClicked() {
     state = "game";
   }
   if (state === "win" || state === "lost") {
-    state = "start";
-    gameState = true;
-    submarineY = 100;
+    state = "game";
+    submarineY = -100;
     velocity = 0.5;
-    gravity = -1;
+    gravity = 0.15;
   }
 }
