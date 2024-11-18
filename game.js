@@ -58,8 +58,6 @@ function fishMove() {
 }
 
 function oceanBottom() {
-  push();
-
   //sand bottom
   fill(246, 215, 176);
   noStroke();
@@ -79,8 +77,6 @@ function oceanBottom() {
   triangle(o - 205, r + 320, o - 210, r + 270, o - 200, r + 320);
   triangle(o - 200, r + 320, o - 195, r + 250, o - 190, r + 320);
   triangle(o - 190, r + 320, o - 185, r + 270, o - 180, r + 320);
-
-  pop();
 }
 
 function submarine(x, y) {
@@ -153,7 +149,6 @@ function submarine(x, y) {
     x + 160 * s,
     y + 70 * s
   );
-
   pop();
 }
 
