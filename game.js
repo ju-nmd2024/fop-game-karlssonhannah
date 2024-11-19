@@ -1,5 +1,6 @@
 function setup() {
   createCanvas(700, 600);
+  fishColor = color(255, 153, 51);
 }
 let f = 300;
 let i = 200;
@@ -14,7 +15,7 @@ let state = "start";
 let shadowWidth = 0;
 let shadowHeight = 0;
 let fishY = 200;
-let fishColor = color(255, 153, 51);
+let fishColor;
 
 function fish(f, i) {
   fill(fishColor);
