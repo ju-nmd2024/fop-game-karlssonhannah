@@ -7,17 +7,14 @@ let o = 300;
 let r = 250;
 const s = 0.6;
 let velocity = 0.5;
-let gravity = 0.15;
+let gravity = 0;
 let submarineX = 350;
-let submarineY = -100;
-let gameState = true;
+let submarineY = 0;
 let state = "start";
 let shadowWidth = 0;
 let shadowHeight = 0;
 let fishY = 200;
 let fishColor = color(255, 153, 51);
-x = 0;
-y = 0;
 
 function fish(f, i) {
   fill(fishColor);
@@ -179,18 +176,18 @@ function gameScreen() {
   grassBottom();
 
   submarine(submarineX, submarineY);
-  if (gameState === true) {
-    if (keyIsDown(32)) {
-      gravity = -1;
-    } else {
-      gravity = 0.1;
-    }
-    velocity = velocity + gravity;
-    submarineY = submarineY + velocity;
 
-    shadowWidth = (submarineY / 750) * 200;
-    shadowHeight = (submarineY / 750) * 40;
+  if (keyIsDown(32)) {
+    gravity = -2;
+  } else {
+    gravity = 0.15;
   }
+
+  velocity = velocity + gravity;
+  submarineY = submarineY + velocity;
+
+  shadowWidth = (submarineY / 550) * 200;
+  shadowHeight = (submarineY / 550) * 40;
 }
 
 function draw() {
@@ -245,7 +242,7 @@ function mouseClicked() {
   }
   if (state === "win" || state === "lost") {
     state = "game";
-    submarineY = -100;
+    submarineY = 0;
     velocity = 0.5;
     gravity = 0.15;
   }
