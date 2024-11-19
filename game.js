@@ -8,7 +8,7 @@ let o = 300;
 let r = 250;
 const s = 0.6;
 let velocity = 0.5;
-let gravity = 0;
+let gravity = 0.15;
 let submarineX = 350;
 let submarineY = 0;
 let state = "start";
@@ -179,7 +179,7 @@ function gameScreen() {
   submarine(submarineX, submarineY);
 
   if (keyIsDown(32)) {
-    gravity = -2;
+    gravity = -0.8;
   } else {
     gravity = 0.15;
   }
